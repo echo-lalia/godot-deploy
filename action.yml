@@ -17,6 +17,10 @@ inputs:
     description: "Platforms to build for (comma-separated: macos,windows,linux,web)"
     required: false
     default: "macos,windows,linux,web"
+  file-name:
+    description: "The file name to use for the exports."
+    required: false
+    default: "game"
   itch-io-api-key:
     description: "Itch.io API key for publishing"
     required: false
@@ -99,7 +103,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ inputs.build-dir }}/macos
-        $GODOT_EXECUTABLE --export-release macOS ${{ inputs.build-dir }}/macos/game.app --headless
+        $GODOT_EXECUTABLE --export-release macOS ${{ inputs.build-dir }}/macos/${{ inputs.file-name }}.app --headless
         [ "$(ls -A ${{ inputs.build-dir }}/macos)" ]
 
     - name: Compress macOS build (to preserve permissions)
@@ -114,7 +118,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ inputs.build-dir }}/windows
-        $GODOT_EXECUTABLE --export-release Windows ${{ inputs.build-dir }}/windows/game.exe --headless
+        $GODOT_EXECUTABLE --export-release Windows ${{ inputs.build-dir }}/windows/${{ inputs.file-name }}.exe --headless
         [ "$(ls -A ${{ inputs.build-dir }}/windows)" ]
 
     - name: Compress Windows build
@@ -129,7 +133,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ inputs.build-dir }}/linux
-        $GODOT_EXECUTABLE --export-release Linux ${{ inputs.build-dir }}/linux/game.x86_64 --headless
+        $GODOT_EXECUTABLE --export-release Linux ${{ inputs.build-dir }}/linux/${{ inputs.file-name }}.x86_64 --headless
         [ "$(ls -A ${{ inputs.build-dir }}/linux)" ]
 
     - name: Compress Linux build (gzipped tar, to keep the executable bit)
